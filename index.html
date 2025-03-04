@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elapsed Time Since Mavi's Birthday</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        #countdown {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .time-unit {
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+            margin: 10px 0;
+        }
+        .time-unit span.label {
+            color: lightgrey;
+            font-size: 0.75em;
+        }
+        .time-unit span.number {
+            color: white;
+            font-size: 1.125em;
+        }
+        #header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #header img {
+            width: 50px;
+            height: 50px;
+        }
+        #header img.left {
+            margin-right: 10px;
+        }
+        #header img.right {
+            margin-left: 10px;
+        }
+        #header h1 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="mavi.jpg" alt="Mavi" class="left">
+        <h1>Time Elapsed Since Mavi's Birthday</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Love_Heart_symbol.svg" alt="Heart" class="right">
+    </div>
+    <div id="countdown"></div>
+    <script>
+        const targetDate = new Date("2024-12-12T11:07:00");
+
+        function updateCountdown() {
+            const now = new Date();
+            const difference = now - targetDate;
+
+            if (difference <= 0) {
+                document.getElementById("countdown").innerHTML = "Mavi's birthday hasn't happened yet!";
+                return;
+            }
+
+            const totalSeconds = Math.floor(difference / 1000);
+            const months = Math.floor(totalSeconds / (30.44 * 24 * 60 * 60));
+            const days = Math.floor((totalSeconds % (30.44 * 24 * 60 * 60)) / (24 * 60 * 60));
+            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById("countdown").innerHTML = `
+                <div class="time-unit"><span class="label">Months</span><span class="number">${months}</span></div>
+                <div class="time-unit"><span class="label">Days</span><span class="number">${days}</span></div>
+                <div class="time-unit"><span class="label">Hours</span><span class="number">${hours}</span></div>
+                <div class="time-unit"><span class="label">Minutes</span><span class="number">${minutes}</span></div>
+                <div class="time-unit"><span class="label">Seconds</span><span class="number">${seconds}</span></div>
+            `;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();  // Initial call to display the countdown immediately
+    </script>
+</body>
+</html>
