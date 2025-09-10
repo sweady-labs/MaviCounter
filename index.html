@@ -64,7 +64,7 @@
             font-weight: 700;
             transition: color 0.3s;
         }
-        #progress-container {
+        .progress-container {
             width: 340px;
             background: #222;
             border-radius: 12px;
@@ -91,7 +91,26 @@
             left: 0;
             top: 0;
         }
-        #progress-label {
+        /* Person progress bars use different colors for distinction */
+        #progress-bar-enrico {
+            height: 100%;
+            background: linear-gradient(90deg, #2196f3 0%, #64b5f6 100%);
+            border-radius: 11px;
+            transition: width 0.5s;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #progress-bar-ezgi {
+            height: 100%;
+            background: linear-gradient(90deg, #e91e63 0%, #f06292 100%);
+            border-radius: 11px;
+            transition: width 0.5s;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #progress-label, .person-label {
             text-align: center;
             margin-top: 10px;
             color: #bdbdbd;
@@ -113,15 +132,62 @@
         <img src="heart.png" alt="Heart" class="right">
     </div>
     <div id="countdown"></div>
-    <div id="progress-container">
+    <div class="progress-container" id="progress-container">
         <div class="progress-track">
             <div id="progress-bar"></div>
         </div>
         <div id="progress-label"></div>
     </div>
+    <!-- Enrico Progress Bar -->
+    <div class="progress-container person-bar">
+        <div class="progress-track">
+            <div id="progress-bar-enrico" class="person-bar"></div>
+        </div>
+        <div id="progress-label-enrico" class="person-label"></div>
+    </div>
+    <!-- Ezgi Progress Bar -->
+    <div class="progress-container person-bar">
+        <div class="progress-track">
+            <div id="progress-bar-ezgi" class="person-bar"></div>
+        </div>
+        <div id="progress-label-ezgi" class="person-label"></div>
+    </div>
     <script>
-        const targetDate = new Date("2024-12-12T11:07:00");
+        function updatePersonProgressBar(birthDateStr, barId, labelId, name) {
+            const now = new Date();
+            const targetDate = new Date(birthDateStr);
 
+            // Find last and next birthday
+            const lastBirthday = new Date(targetDate);
+            lastBirthday.setFullYear(now.getFullYear());
+            if (now < lastBirthday) lastBirthday.setFullYear(now.getFullYear() - 1);
+            const nextBirthday = new Date(lastBirthday);
+            nextBirthday.setFullYear(lastBirthday.getFullYear() + 1);
+
+            const yearElapsed = now - lastBirthday;
+            const yearTotal = nextBirthday - lastBirthday;
+            const progress = Math.min(1, Math.max(0, yearElapsed / yearTotal));
+            const percent = (progress * 100).toFixed(2);
+
+            document.getElementById(barId).style.width = percent + "%";
+            const daysLeft = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
+            const birthYear = targetDate.getFullYear();
+            const nextBirthdayNumber = nextBirthday.getFullYear() - birthYear;
+
+            function ordinal(n) {
+                if (n % 100 >= 11 && n % 100 <= 13) return n + "th";
+                switch (n % 10) {
+                    case 1: return n + "st";
+                    case 2: return n + "nd";
+                    case 3: return n + "rd";
+                    default: return n + "th";
+                }
+            }
+            document.getElementById(labelId).innerText =
+                `${daysLeft} days left until ${name}'s ${ordinal(nextBirthdayNumber)} birthday`;
+        }
+
+        const targetDate = new Date("2024-12-12T11:07:00");
         function updateCountdown() {
             const now = new Date();
             const difference = now - targetDate;
@@ -149,7 +215,7 @@
                 <div class="time-unit"><span class="label">Seconds</span><span class="number">${seconds}</span></div>
             `;
 
-            // Progress bar calculation
+            // Progress bar calculation for Mavi
             const lastBirthday = new Date(targetDate);
             lastBirthday.setFullYear(now.getFullYear());
             if (now < lastBirthday) lastBirthday.setFullYear(now.getFullYear() - 1);
@@ -177,6 +243,10 @@
             }
             document.getElementById("progress-label").innerText =
                 `${daysLeft} days left until Mavi's ${ordinal(nextBirthdayNumber)} birthday`;
+
+            // Update Enrico and Ezgi progress bars
+            updatePersonProgressBar("1989-03-18T00:00:00", "progress-bar-enrico", "progress-label-enrico", "Enrico");
+            updatePersonProgressBar("1991-09-17T00:00:00", "progress-bar-ezgi", "progress-label-ezgi", "Ezgi");
         }
 
         setInterval(updateCountdown, 1000);
