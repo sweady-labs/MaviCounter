@@ -25,9 +25,9 @@
         #header img {
             width: 80px;
             height: 80px;
-            border-radius: 50%;
+            /* border-radius: 50%; */ /* Remove the circle */
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            object-fit: cover;
+            object-fit: contain; /* Show the whole image */
         }
         #header h1 {
             font-size: 2em;
@@ -132,7 +132,7 @@
         <img src="heart.png" alt="Heart" class="right">
     </div>
     <div id="countdown"></div>
-    <div class="progress-container" id="progress-container">
+    <div id="progress-container">
         <div class="progress-track">
             <div id="progress-bar"></div>
         </div>
