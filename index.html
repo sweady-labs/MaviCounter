@@ -15,25 +15,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Move content to the top */
-            transform: scale(0.);
+            justify-content: flex-start;
+            transform: scale(0.95);
             transform-origin: center center;
-            padding-top: 40px; /* Optional: add space from the top */
+            padding-top: 40px;
         }
         #header {
             margin: 32px 0 24px 0;
             display: flex;
             align-items: center;
             gap: 24px;
-            justify-content: center; /* Add this line */
+            justify-content: center;
             width: 100%;
         }
-        #header img {
-            width: 120px;   /* 50% bigger than 80px */
-            height: 120px;  /* 50% bigger than 80px */
-            /* border-radius: 50%; */ /* Remove the circle */
+        #header img.left {
+            width: 120px;
+            height: 120px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            object-fit: contain; /* Show the whole image */
+            object-fit: contain;
+        }
+        #header img.right {
+            width: 120px;
+            height: 120px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            object-fit: contain;
         }
         #header h1 {
             font-size: 2em;
@@ -41,8 +46,8 @@
             margin: 0;
             color: #81c784;
             letter-spacing: 1px;
-            flex: 1; /* Add this line for even spacing */
-            text-align: center; /* Add this line to center text */
+            flex: 1;
+            text-align: center;
         }
         #countdown {
             display: flex;
@@ -73,7 +78,7 @@
             transition: color 0.3s;
         }
         #main-content {
-            width: 600px; /* increase this value for longer containers */
+            width: 600px;
             max-width: 95vw;
             display: flex;
             flex-direction: column;
@@ -87,6 +92,7 @@
             padding: 18px 20px 24px 20px;
             box-sizing: border-box;
             box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: box-shadow 0.3s, background 0.3s;
         }
         .progress-track {
             width: 100%;
@@ -106,7 +112,6 @@
             left: 0;
             top: 0;
         }
-        /* Person progress bars use different colors for distinction */
         #progress-bar-enrico {
             height: 100%;
             background: linear-gradient(90deg, #2196f3 0%, #64b5f6 100%);
@@ -132,6 +137,12 @@
             font-size: 1.05em;
             font-weight: 500;
         }
+        /* Pulsing animation for containers */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 var(--pulse-color, orange); }
+            50% { box-shadow: 0 0 24px 8px var(--pulse-color, orange); }
+            100% { box-shadow: 0 0 0 0 var(--pulse-color, orange); }
+        }
         @media (max-width: 600px) {
             #header h1 { font-size: 1.2em; }
             #main-content { width: 95vw; }
@@ -155,14 +166,14 @@
             <div id="progress-label"></div>
         </div>
         <!-- Enrico Progress Bar -->
-        <div class="progress-container person-bar">
+        <div class="progress-container person-bar" id="container-enrico">
             <div class="progress-track">
                 <div id="progress-bar-enrico" class="person-bar"></div>
             </div>
             <div id="progress-label-enrico" class="person-label"></div>
         </div>
         <!-- Ezgi Progress Bar -->
-        <div class="progress-container person-bar">
+        <div class="progress-container person-bar" id="container-ezgi">
             <div class="progress-track">
                 <div id="progress-bar-ezgi" class="person-bar"></div>
             </div>
@@ -170,7 +181,17 @@
         </div>
     </div>
     <script>
-        function updatePersonProgressBar(birthDateStr, barId, labelId, name) {
+        function setPulse(container, color, pulse) {
+            if (pulse) {
+                container.style.animation = "pulse 1s infinite";
+                container.style.setProperty("--pulse-color", color);
+            } else {
+                container.style.animation = "";
+                container.style.background = "#222";
+            }
+        }
+
+        function updatePersonProgressBar(birthDateStr, barId, labelId, name, containerId, barColor) {
             const now = new Date();
             const targetDate = new Date(birthDateStr);
 
@@ -202,6 +223,16 @@
             }
             document.getElementById(labelId).innerText =
                 `${daysLeft} days left until ${name}'s ${ordinal(nextBirthdayNumber)} birthday`;
+
+            // Pulsing logic
+            const container = document.getElementById(containerId);
+            if (daysLeft <= 5) {
+                setPulse(container, "orange", true);
+            } else if (daysLeft <= 10) {
+                setPulse(container, barColor, true);
+            } else {
+                setPulse(container, "", false);
+            }
         }
 
         const targetDate = new Date("2024-12-12T11:07:00");
@@ -261,9 +292,13 @@
             document.getElementById("progress-label").innerText =
                 `${daysLeft} days left until Mavi's ${ordinal(nextBirthdayNumber)} birthday`;
 
-            // Update Enrico and Ezgi progress bars
-            updatePersonProgressBar("1989-03-18T00:00:00", "progress-bar-enrico", "progress-label-enrico", "Enrico");
-            updatePersonProgressBar("1991-09-17T00:00:00", "progress-bar-ezgi", "progress-label-ezgi", "Ezgi");
+            // Update Enrico and Ezgi progress bars with pulsing
+            updatePersonProgressBar(
+                "1989-03-18T00:00:00", "progress-bar-enrico", "progress-label-enrico", "Enrico", "container-enrico", "#2196f3"
+            );
+            updatePersonProgressBar(
+                "1991-09-17T00:00:00", "progress-bar-ezgi", "progress-label-ezgi", "Ezgi", "container-ezgi", "#e91e63"
+            );
         }
 
         setInterval(updateCountdown, 1000);
