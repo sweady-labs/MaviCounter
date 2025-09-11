@@ -15,12 +15,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transform: scale(0.6);
+            transform-origin: top center;
         }
         #header {
             margin: 32px 0 24px 0;
             display: flex;
             align-items: center;
             gap: 24px;
+            justify-content: center; /* Add this line */
+            width: 100%;
         }
         #header img {
             width: 80px;
@@ -35,6 +39,8 @@
             margin: 0;
             color: #81c784;
             letter-spacing: 1px;
+            flex: 1; /* Add this line for even spacing */
+            text-align: center; /* Add this line to center text */
         }
         #countdown {
             display: flex;
@@ -64,8 +70,15 @@
             font-weight: 700;
             transition: color 0.3s;
         }
+        #main-content {
+            width: 600px; /* increase this value for longer containers */
+            max-width: 95vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .progress-container {
-            width: 340px;
+            width: 100%;
             background: #222;
             border-radius: 12px;
             margin-top: 16px;
@@ -119,38 +132,40 @@
         }
         @media (max-width: 600px) {
             #header h1 { font-size: 1.2em; }
-            #progress-container { width: 95vw; }
+            #main-content { width: 95vw; }
             #countdown { gap: 8px; }
             .time-unit { min-width: 60px; padding: 12px 8px; }
         }
     </style>
 </head>
 <body>
-    <div id="header">
-        <img src="mavi.png" alt="Mavi" class="left">
-        <h1>Time Elapsed Since Mavi's Birth</h1>
-        <img src="heart.png" alt="Heart" class="right">
-    </div>
-    <div id="countdown"></div>
-    <div class="progress-container" id="progress-container">
-        <div class="progress-track">
-            <div id="progress-bar"></div>
+    <div id="main-content">
+        <div id="header">
+            <img src="mavi.png" alt="Mavi" class="left">
+            <h1>Time Elapsed Since Mavi's Birth</h1>
+            <img src="heart.png" alt="Heart" class="right">
         </div>
-        <div id="progress-label"></div>
-    </div>
-    <!-- Enrico Progress Bar -->
-    <div class="progress-container person-bar">
-        <div class="progress-track">
-            <div id="progress-bar-enrico" class="person-bar"></div>
+        <div id="countdown"></div>
+        <div class="progress-container" id="progress-container">
+            <div class="progress-track">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="progress-label"></div>
         </div>
-        <div id="progress-label-enrico" class="person-label"></div>
-    </div>
-    <!-- Ezgi Progress Bar -->
-    <div class="progress-container person-bar">
-        <div class="progress-track">
-            <div id="progress-bar-ezgi" class="person-bar"></div>
+        <!-- Enrico Progress Bar -->
+        <div class="progress-container person-bar">
+            <div class="progress-track">
+                <div id="progress-bar-enrico" class="person-bar"></div>
+            </div>
+            <div id="progress-label-enrico" class="person-label"></div>
         </div>
-        <div id="progress-label-ezgi" class="person-label"></div>
+        <!-- Ezgi Progress Bar -->
+        <div class="progress-container person-bar">
+            <div class="progress-track">
+                <div id="progress-bar-ezgi" class="person-bar"></div>
+            </div>
+            <div id="progress-label-ezgi" class="person-label"></div>
+        </div>
     </div>
     <script>
         function updatePersonProgressBar(birthDateStr, barId, labelId, name) {
