@@ -16,7 +16,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start; /* Move content to the top */
-            transform: scale(0.75);
+            transform: scale(0.);
             transform-origin: center center;
             padding-top: 40px; /* Optional: add space from the top */
         }
@@ -170,21 +170,6 @@
         </div>
     </div>
     <script>
-        function setFlickerBackground(flicker) {
-            if (flicker) {
-                if (!window.flickerInterval) {
-                    window.flickerInterval = setInterval(() => {
-                        document.body.style.background = 
-                            document.body.style.background === "orange" ? "#000" : "orange";
-                    }, 300);
-                }
-            } else {
-                clearInterval(window.flickerInterval);
-                window.flickerInterval = null;
-                document.body.style.background = "#000";
-            }
-        }
-
         function updatePersonProgressBar(birthDateStr, barId, labelId, name) {
             const now = new Date();
             const targetDate = new Date(birthDateStr);
@@ -217,11 +202,6 @@
             }
             document.getElementById(labelId).innerText =
                 `${daysLeft} days left until ${name}'s ${ordinal(nextBirthdayNumber)} birthday`;
-
-            // Flicker if within 6 days of any birthday
-            if (daysLeft <= 6) {
-                setFlickerBackground(true);
-            }
         }
 
         const targetDate = new Date("2024-12-12T11:07:00");
@@ -234,7 +214,6 @@
                 document.getElementById("progress-bar").style.width = "0%";
                 const daysLeft = Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
                 document.getElementById("progress-label").innerText = `${daysLeft} days left until Mavi's 1st birthday`;
-                setFlickerBackground(daysLeft <= 6);
                 return;
             }
 
@@ -282,19 +261,9 @@
             document.getElementById("progress-label").innerText =
                 `${daysLeft} days left until Mavi's ${ordinal(nextBirthdayNumber)} birthday`;
 
-            // Flicker if within 6 days of any birthday
-            let flicker = daysLeft <= 6;
-
             // Update Enrico and Ezgi progress bars
             updatePersonProgressBar("1989-03-18T00:00:00", "progress-bar-enrico", "progress-label-enrico", "Enrico");
             updatePersonProgressBar("1991-09-17T00:00:00", "progress-bar-ezgi", "progress-label-ezgi", "Ezgi");
-
-            // Check Enrico and Ezgi days left for flicker
-            const enricoDaysLeft = Math.ceil((new Date("1989-03-18T00:00:00").setFullYear(now.getFullYear() + (now > new Date(now.getFullYear(), 2, 18) ? 1 : 0)) - now) / (1000 * 60 * 60 * 24));
-            const ezgiDaysLeft = Math.ceil((new Date("1991-09-17T00:00:00").setFullYear(now.getFullYear() + (now > new Date(now.getFullYear(), 8, 17) ? 1 : 0)) - now) / (1000 * 60 * 60 * 24));
-            if (enricoDaysLeft <= 6 || ezgiDaysLeft <= 6) flicker = true;
-
-            setFlickerBackground(flicker);
         }
 
         setInterval(updateCountdown, 1000);
