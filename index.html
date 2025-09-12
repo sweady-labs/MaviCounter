@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Elapsed Time Since Mavi's Birth</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
     <style>
+        :root {
+            --color-bg: #222;
+            --color-track: #838181;
+            --color-border: #bbb;
+            --color-accent: #81c784;
+            --radius: 12px;
+            --padding: 18px;
+        }
         html, body {
-            background: transparent !important; /* ensure MagicMirror shows wallpaper */
+            background: transparent !important;
         }
         body {
             font-family: 'Inter', Arial, sans-serif;
@@ -18,11 +26,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            transform: scale(0.8); /* 20% smaller */
+            transform: scale(0.8);
             transform-origin: top center;
             padding-top: 40px;
         }
-        #header {
+        main {
+            width: 600px;
+            max-width: 95vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
             margin: 32px 0 24px 0;
             display: flex;
             align-items: center;
@@ -30,28 +45,22 @@
             justify-content: center;
             width: 100%;
         }
-        #header img.left {
+        .header__img {
             width: 120px;
             height: 120px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             object-fit: contain;
         }
-        #header img.right {
-            width: 120px;
-            height: 120px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            object-fit: contain;
-        }
-        #header h1 {
+        .header__title {
             font-size: 2em;
             font-weight: 700;
             margin: 0;
-            color: #81c784;
+            color: var(--color-accent);
             letter-spacing: 1px;
             flex: 1;
             text-align: center;
         }
-        #countdown {
+        .countdown {
             display: flex;
             gap: 16px;
             margin-bottom: 24px;
@@ -59,39 +68,32 @@
             justify-content: center;
         }
         .time-unit {
-            background: #222;
-            border-radius: 12px;
-            padding: 18px 24px;
+            background: var(--color-bg);
+            border-radius: var(--radius);
+            padding: var(--padding) 24px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.12);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-width: 80px;
         }
-        .time-unit .label {
+        .time-unit__label {
             color: #bdbdbd;
             font-size: 0.85em;
             margin-bottom: 6px;
         }
-        .time-unit .number {
+        .time-unit__number {
             color: #fff;
             font-size: 1.5em;
             font-weight: 700;
             transition: color 0.3s;
         }
-        #main-content {
-            width: 600px;
-            max-width: 95vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
         .progress-container {
             width: 100%;
-            background: #222;
-            border-radius: 12px;
+            background: var(--color-bg);
+            border-radius: var(--radius);
             margin-top: 16px;
-            padding: 18px 20px 24px 20px;
+            padding: var(--padding) 20px 24px 20px;
             box-sizing: border-box;
             box-shadow: 0 2px 8px rgba(0,0,0,0.12);
             transition: box-shadow 0.3s, background 0.3s;
@@ -99,9 +101,9 @@
         .progress-track {
             width: 100%;
             height: 22px;
-            background: #838181;
+            background: var(--color-track);
             border-radius: 11px;
-            border: 1.5px solid #bbb;
+            border: 1.5px solid var(--color-border);
             position: relative;
             overflow: hidden;
         }
@@ -139,49 +141,48 @@
             font-size: 1.05em;
             font-weight: 500;
         }
-        /* Pulsing animation for containers */
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 var(--pulse-color, orange); }
             50% { box-shadow: 0 0 24px 8px var(--pulse-color, orange); }
             100% { box-shadow: 0 0 0 0 var(--pulse-color, orange); }
         }
         @media (max-width: 600px) {
-            #header h1 { font-size: 1.2em; }
-            #main-content { width: 95vw; }
-            #countdown { gap: 8px; }
+            .header__title { font-size: 1.2em; }
+            main { width: 95vw; }
+            .countdown { gap: 8px; }
             .time-unit { min-width: 60px; padding: 12px 8px; }
         }
     </style>
 </head>
 <body>
-    <div id="main-content">
-        <div id="header">
-            <img src="mavi.png" alt="Mavi" class="left">
-            <h1>Time Elapsed Since Mavi's Birth</h1>
-            <img src="heart.png" alt="Heart" class="right">
-        </div>
-        <div id="countdown"></div>
-        <div class="progress-container" id="progress-container">
+    <main>
+        <header class="header">
+            <img src="mavi.png" alt="Mavi" class="header__img" />
+            <h1 class="header__title">Time Elapsed Since Mavi's Birth</h1>
+            <img src="heart.png" alt="Heart" class="header__img" />
+        </header>
+        <section class="countdown" id="countdown"></section>
+        <section class="progress-container" id="progress-container">
             <div class="progress-track">
                 <div id="progress-bar"></div>
             </div>
             <div id="progress-label"></div>
-        </div>
+        </section>
         <!-- Enrico Progress Bar -->
-        <div class="progress-container person-bar" id="container-enrico">
+        <section class="progress-container person-bar" id="container-enrico">
             <div class="progress-track">
                 <div id="progress-bar-enrico" class="person-bar"></div>
             </div>
             <div id="progress-label-enrico" class="person-label"></div>
-        </div>
+        </section>
         <!-- Ezgi Progress Bar -->
-        <div class="progress-container person-bar" id="container-ezgi">
+        <section class="progress-container person-bar" id="container-ezgi">
             <div class="progress-track">
                 <div id="progress-bar-ezgi" class="person-bar"></div>
             </div>
             <div id="progress-label-ezgi" class="person-label"></div>
-        </div>
-    </div>
+        </section>
+    </main>
     <script>
         function setPulse(container, color, pulse) {
             if (pulse) {
@@ -189,7 +190,7 @@
                 container.style.setProperty("--pulse-color", color);
             } else {
                 container.style.animation = "";
-                container.style.background = "#222";
+                container.style.background = "var(--color-bg)";
             }
         }
 
@@ -243,7 +244,7 @@
             const difference = now - targetDate;
 
             if (difference <= 0) {
-                document.getElementById("countdown").innerHTML = "<div class='time-unit'><span class='label'>Waiting</span><span class='number'>Soon!</span></div>";
+                document.getElementById("countdown").innerHTML = "<div class='time-unit'><span class='time-unit__label'>Waiting</span><span class='time-unit__number'>Soon!</span></div>";
                 document.getElementById("progress-bar").style.width = "0%";
                 const daysLeft = Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
                 document.getElementById("progress-label").innerText = `${daysLeft} days left until Mavi's 1st birthday`;
@@ -258,11 +259,11 @@
             const seconds = totalSeconds % 60;
 
             document.getElementById("countdown").innerHTML = `
-                <div class="time-unit"><span class="label">Months</span><span class="number">${months}</span></div>
-                <div class="time-unit"><span class="label">Days</span><span class="number">${days}</span></div>
-                <div class="time-unit"><span class="label">Hours</span><span class="number">${hours}</span></div>
-                <div class="time-unit"><span class="label">Minutes</span><span class="number">${minutes}</span></div>
-                <div class="time-unit"><span class="label">Seconds</span><span class="number">${seconds}</span></div>
+                <div class="time-unit"><span class="time-unit__label">Months</span><span class="time-unit__number">${months}</span></div>
+                <div class="time-unit"><span class="time-unit__label">Days</span><span class="time-unit__number">${days}</span></div>
+                <div class="time-unit"><span class="time-unit__label">Hours</span><span class="time-unit__number">${hours}</span></div>
+                <div class="time-unit"><span class="time-unit__label">Minutes</span><span class="time-unit__number">${minutes}</span></div>
+                <div class="time-unit"><span class="time-unit__label">Seconds</span><span class="time-unit__number">${seconds}</span></div>
             `;
 
             // Progress bar calculation for Mavi
